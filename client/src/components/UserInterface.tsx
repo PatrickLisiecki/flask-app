@@ -68,7 +68,7 @@ const UserInterface: React.FC<UserInterfaceProps> = ({ serverName }) => {
   };
 
   {
-    /* Updating a new user */
+    /* Updating a user */
   }
   const handleUpdateUser = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -89,6 +89,18 @@ const UserInterface: React.FC<UserInterfaceProps> = ({ serverName }) => {
       );
     } catch (err) {
       console.error("Error updating user: ", err);
+    }
+  };
+
+  {
+    /* Deleting a user */
+  }
+  const deleteUser = async (userId: number) => {
+    try {
+      await axios.delete(`${apiUrl}/api/${serverName}/users/${userId}`);
+      setUsers(users.filter((user) => user.id !== userId));
+    } catch (err) {
+      console.error("Error deleting user: ", err);
     }
   };
 
