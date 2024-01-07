@@ -49,6 +49,9 @@ const UserInterface: React.FC<UserInterfaceProps> = ({ serverName }) => {
     fetchData();
   }, [serverName, apiUrl]);
 
+  {
+    /* Creating a new user */
+  }
   const createUser = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -61,6 +64,31 @@ const UserInterface: React.FC<UserInterfaceProps> = ({ serverName }) => {
       setNewUser({ name: "", email: "" });
     } catch (err) {
       console.error("Error creating user: ", err);
+    }
+  };
+
+  {
+    /* Updating a new user */
+  }
+  const handleUpdateUser = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+      await axios.put(`${apiUrl}/api/${serverName}/users/${updateUser.id}`, {
+        name: updateUser.name,
+        email: updateUser.email,
+      });
+      setUpdateUser({ id: "", name: "", email: "" });
+      setUsers(
+        users.map((user) => {
+          if (user.id === parseInt(updateUser.id)) {
+            return { ...user, name: updateUser.name, email: updateUser.email };
+          }
+          return user;
+        }),
+      );
+    } catch (err) {
+      console.error("Error updating user: ", err);
     }
   };
 
@@ -99,6 +127,41 @@ const UserInterface: React.FC<UserInterfaceProps> = ({ serverName }) => {
           className="w-full p-2 text-white bg-blue-500 rounded hover:bg-blue-600"
         >
           Add User
+        </button>
+      </form>
+
+      {/* Update User */}
+      <form
+        onSubmit={handleUpdateUser}
+        className="w-1/2 mb-6 p-4 bg-blue-100 rounded shadow mx-auto"
+      >
+        <input
+          placeholder="User Id"
+          value={updateUser.id}
+          onChange={(e) => setUpdateUser({ ...updateUser, id: e.target.value })}
+          className="mb-2 w-full p-2 border border-gray-300 rounded"
+        />
+        <input
+          placeholder="New Name"
+          value={updateUser.name}
+          onChange={(e) =>
+            setUpdateUser({ ...updateUser, name: e.target.value })
+          }
+          className="mb-2 w-full p-2 border border-gray-300 rounded"
+        />
+        <input
+          placeholder="New Email"
+          value={updateUser.email}
+          onChange={(e) =>
+            setUpdateUser({ ...updateUser, email: e.target.value })
+          }
+          className="mb-2 w-full p-2 border border-gray-300 rounded"
+        />
+        <button
+          type="submit"
+          className="w-full p-2 text-white bg-blue-500 rounded hover:bg-blue-600"
+        >
+          Update User
         </button>
       </form>
 
